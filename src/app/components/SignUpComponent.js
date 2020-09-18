@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {FormControl, TextField} from '@material-ui/core';
 import axios from 'axios';
+import {toast} from 'react-toastify';
 
 class SignUpComponent extends Component {
 
@@ -111,6 +112,7 @@ class SignUpComponent extends Component {
                 const isSubmitted = await axios.post('http://localhost:3000/auth/signup', data);
 
                 if (isSubmitted) {
+                    toast.success('Your account is created successfully.');
                     this.props.history.push('/login');
                 }
 

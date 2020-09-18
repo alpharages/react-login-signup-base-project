@@ -23,14 +23,21 @@ class LoginComponent extends Component {
     formSubmission = async (event) => {
         event.preventDefault();
 
-        const isSubmitted = await axios.post('http://localhost:3000/auth/login', this.state);
+        try {
 
-        if (isSubmitted) {
-            const token = isSubmitted.data.data.token;
-            localStorage.setItem('token', token);
-            toast.success('You are logged in successfully.');
-            this.props.history.push('/profile');
+            const isSubmitted = await axios.post('http://localhost:3000/auth/login', this.state);
+
+            if (isSubmitted) {
+                const token = isSubmitted.data.data.token;
+                localStorage.setItem('token', token);
+                toast.success('You are logged in successfully.');
+                this.props.history.push('/profile');
+            }
+
+        } catch (err) {
+            toast.error(err.response.data.message);
         }
+
 
     };
 
