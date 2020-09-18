@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import axios from 'axios';
+import {toast} from 'react-toastify';
 
 class ProfileComponent extends Component {
 
@@ -9,13 +11,24 @@ class ProfileComponent extends Component {
         };
     }
 
-
     logout = () => {
         localStorage.removeItem('token');
         this.props.history.push('/login');
     };
 
-    viewName = () => {
+    viewName = async () => {
+
+        // private api accessing
+        try {
+            const res = await axios.get('http://localhost:3000/auth/getprofile', {headers: {'access-token': localStorage.getItem('token')}});
+
+            toast.success('Success');
+            this.setState({name: res.data.data.name});
+
+        } catch (err) {
+            toast.error(err.response.data.message);
+        }
+
     };
 
     render() {
