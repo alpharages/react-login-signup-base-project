@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import LoginComponent from './app/components/LoginComponent';
 import SignUpComponent from './app/components/SignUpComponent';
@@ -9,6 +11,16 @@ import ProfileComponent from './app/components/ProfileComponent';
 function App() {
     return (
         <div>
+            <ToastContainer position="bottom-right"
+                            autoClose={5000}
+                            hideProgressBar={false}
+                            newestOnTop={true}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+            />
             <BrowserRouter>
                 <Switch>
                     <Route path='/' component={LoginComponent} exact={true}/>
