@@ -7,6 +7,7 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import LoginComponent from './app/components/LoginComponent';
 import SignUpComponent from './app/components/SignUpComponent';
 import ProfileComponent from './app/components/ProfileComponent';
+import PrivateRoute from './app/common/PrivateRoute';
 
 function App() {
     return (
@@ -26,8 +27,8 @@ function App() {
                     <Route path='/' component={LoginComponent} exact={true}/>
                     <Route path='/login' component={LoginComponent} exact={true}/>
                     <Route path='/signup' component={SignUpComponent} exact={true}/>
-                    {/*protected route*/}
-                    <Route path='/profile' component={ProfileComponent} exact={true}/>
+                    {/*private route*/}
+                    <PrivateRoute path='/profile' component={ProfileComponent} exact={true}/>
                 </Switch>
             </BrowserRouter>
         </div>
