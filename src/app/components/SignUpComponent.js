@@ -14,6 +14,7 @@ class SignUpComponent extends Component {
             email: '',
             password: '',
             phone: '',
+            image: '',
             // form controls validation errors
             firstNameError: false,
             firstNameMsg: '',
@@ -33,6 +34,11 @@ class SignUpComponent extends Component {
         this.setState({
             [event.target.name]: event.target.value
         });
+    };
+
+    // image uploading handler
+    imageUpload = (event) => {
+        this.setState({image: event.target.files[0]});
     };
 
     // performing validation checks
@@ -64,7 +70,7 @@ class SignUpComponent extends Component {
             errors.passwordError = true;
         }
 
-        if (this.state.phone === '') {
+        if (this.state.phone.length !== 11) {
             isError = true;
             errors.phoneMsg = 'Phone number must have 11 digits.';
             errors.phoneError = true;
@@ -101,22 +107,30 @@ class SignUpComponent extends Component {
             });
 
             try {
+                const formData = new FormData();
+
                 const data = {
                     firstName: this.state.firstName,
                     lastName: this.state.lastName,
                     email: this.state.email,
                     password: this.state.password,
-                    phone: this.state.phone
+                    phone: this.state.phone,
+                    image: this.state.image
                 };
 
-                const isSubmitted = await axios.post('http://localhost:3000/auth/signup', data);
+                for (const field of Object.keys(data)) {
+                    formData.append(field, data[field]);
+                }
+
+                const isSubmitted = await axios.post('http://localhost:3000/auth/signup', formData);
 
                 if (isSubmitted) {
-                    toast.success('Your account is created successfully.');
+                    toast.success(isSubmitted.data.message);
                     this.props.history.push('/login');
                 }
 
             } catch (error) {
+                toast.error(error.response.data.message);
                 console.log(error);
             }
 
@@ -173,6 +187,21 @@ class SignUpComponent extends Component {
 
                     <FormControl fullWidth className='mt-4'>
                         <TextField
+                            placeholder="Enter your phone number here"
+                            variant="outlined"
+                            label="Phone"
+                            type="number"
+                            name="phone"
+                            inputProps={{min: 0}}
+                            value={this.state.phone}
+                            onChange={this.formStateUpdate}
+                            error={this.state.phoneError}
+                            helperText={this.state.phoneMsg}
+                        />
+                    </FormControl>
+
+                    <FormControl fullWidth className='mt-4'>
+                        <TextField
                             placeholder="Enter your password here"
                             variant="outlined"
                             label="Password"
@@ -186,18 +215,8 @@ class SignUpComponent extends Component {
                     </FormControl>
 
                     <FormControl fullWidth className='mt-4'>
-                        <TextField
-                            placeholder="Enter your phone number here"
-                            variant="outlined"
-                            label="Phone"
-                            type="number"
-                            name="phone"
-                            inputProps={{min: 0}}
-                            value={this.state.phone}
-                            onChange={this.formStateUpdate}
-                            error={this.state.phoneError}
-                            helperText={this.state.phoneMsg}
-                        />
+                        <label htmlFor='image'> Profile Image </label>
+                        <input type='file' accept='image/*' id='image' onChange={this.imageUpload}/>
                     </FormControl>
 
                     <button type="submit" className="btn btn-primary w-100 mt-4">Sign Up</button>
